@@ -3,13 +3,14 @@ package com.asura.library.posters;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 public class BitmapImage extends ImagePoster implements Parcelable {
-    private Bitmap bitmap;
-    private int videoResourcePath;
+    private final Bitmap bitmap;
+    private final int videoResourcePath;
 
-    public BitmapImage(@NonNull Bitmap bitmap, @NonNull int videoResourcePath){
+    public BitmapImage(@NonNull Bitmap bitmap, int videoResourcePath){
         this.bitmap = bitmap;
         this.videoResourcePath = videoResourcePath;
     }

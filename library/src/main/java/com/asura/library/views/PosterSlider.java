@@ -6,18 +6,19 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.support.v4.view.ViewPager;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.asura.library.R;
 import com.asura.library.events.IVideoPlayListener;
@@ -145,12 +146,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                     viewPager = new CustomViewPager(getContext(), mustMakeViewPagerWrapContent);
                     viewPager.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        viewPager.setId(View.generateViewId());
-                    } else {
-                        int id = Math.abs(new Random().nextInt((5000 - 1000) + 1) + 1000);
-                        viewPager.setId(id);
-                    }
+                    viewPager.setId(View.generateViewId());
                     viewPager.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     viewPager.addOnPageChangeListener(PosterSlider.this);
                     addView(viewPager);

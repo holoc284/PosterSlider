@@ -1,8 +1,9 @@
 package com.asura.library.views;
 
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 public class CustomViewPager extends ViewPager {
 

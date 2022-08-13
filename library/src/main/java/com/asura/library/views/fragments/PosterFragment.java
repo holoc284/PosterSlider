@@ -3,9 +3,6 @@ package com.asura.library.views.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,14 +23,16 @@ import com.asura.library.views.PosterSlider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -45,19 +44,23 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Util;
 
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 
-public class PosterFragment extends Fragment implements Player.EventListener{
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+public class PosterFragment extends Fragment implements Player.Listener{
 
     private Poster poster;
 
     private IVideoPlayListener videoPlayListener;
 
     private SimpleExoPlayer player;
+    private ExoPlayer player2;
     private boolean isLooping;
 
     public PosterFragment() {
@@ -81,6 +84,7 @@ public class PosterFragment extends Fragment implements Player.EventListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        assert getArguments() != null;
         poster = getArguments().getParcelable("poster");
     }
 
@@ -146,13 +150,13 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                 final PlayerView playerView = new PlayerView(getActivity());
 
                 BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-                TrackSelection.Factory videoTrackSelectionFactory =
-                        new AdaptiveTrackSelection.Factory(bandwidthMeter);
+                AdaptiveTrackSelection.Factory videoTrackSelectionFactory =
+                        new AdaptiveTrackSelection.Factory();
                 TrackSelector trackSelector =
-                        new DefaultTrackSelector(videoTrackSelectionFactory);
+                        new DefaultTrackSelector();
 
-                player = ExoPlayerFactory.newSimpleInstance(getActivity(),trackSelector);
-                //
+//                player = ExoPlayerFactory.newSimpleInstance(getActivity(),trackSelector);
+                player2 = new ExoPlayer.Builder(getActivity(), (RenderersFactory) trackSelector).build();
 
                 playerView.setPlayer(player);
                 if(isLooping){
@@ -170,22 +174,25 @@ public class PosterFragment extends Fragment implements Player.EventListener{
                     }
 
                     DataSource.Factory factory = new DataSource.Factory() {
+                        @NonNull
                         @Override
                         public DataSource createDataSource() {
                             return rawResourceDataSource;
                         }
                     };
-                    ExtractorMediaSource mediaSource = new ExtractorMediaSource(rawResourceDataSource.getUri(),
-                            factory,new DefaultExtractorsFactory(), new Handler(),null);
-                    player.prepare(mediaSource);
+//                    ProgressiveMediaSource mediaSource = new ProgressiveMediaSource(rawResourceDataSource.getUri(),
+//                            factory,new DefaultExtractorsFactory(), new Handler(),null);
+                    ProgressiveMediaSource mediaSource3 = new ProgressiveMediaSource.Factory(new DefaultHttpDataSource.Factory()).createMediaSource(
+                            MediaItem.fromUri(rawResourceDataSource.getUri()));
+                    player2.prepare(mediaSource3, true, false);
                 }
 
                 else if(poster instanceof RemoteVideo){
                     RemoteVideo video = (RemoteVideo) poster;
-                    MediaSource mediaSource = new ExtractorMediaSource.Factory(
-                            new DefaultHttpDataSourceFactory(Util.getUserAgent(getActivity(),"PosterSlider"))).
-                            createMediaSource(video.getUri());
-                    player.prepare(mediaSource, true, false);
+                    ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(
+                            new DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(video.getUri()));
+//                            createMediaSource(video.getUri());
+                    player2.prepare(mediaSource, true, false);
                 }
 
 
@@ -199,12 +206,10 @@ public class PosterFragment extends Fragment implements Player.EventListener{
         }
     }
 
-    @Override
     public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
 
     }
 
-    @Override
     public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
 
     }
@@ -231,7 +236,6 @@ public class PosterFragment extends Fragment implements Player.EventListener{
 
     }
 
-    @Override
     public void onPlayerError(ExoPlaybackException error) {
 
     }
@@ -254,13 +258,13 @@ public class PosterFragment extends Fragment implements Player.EventListener{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser&&isLooping&&player!=null){
+        if(isVisibleToUser&&isLooping&&player2!=null){
             videoPlayListener.onVideoStarted();
-            if(player.getPlaybackState()==STATE_ENDED){
-                player.seekTo(0);
+            if(player2.getPlaybackState()==STATE_ENDED){
+                player2.seekTo(0);
             }
-            player.setPlayWhenReady(true);
-            player.addListener(this);
+            player2.setPlayWhenReady(true);
+            player2.addListener(this);
         }
     }
 }

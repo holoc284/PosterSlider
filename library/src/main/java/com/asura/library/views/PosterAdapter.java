@@ -1,10 +1,12 @@
 package com.asura.library.views;
 
-import android.support.annotation.LayoutRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.annotation.SuppressLint;
 import android.util.LayoutDirection;
+
+import androidx.annotation.LayoutRes;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.posters.Poster;
@@ -40,6 +42,7 @@ public class PosterAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public Fragment getItem(int position) {
         if (posters.isEmpty() && emptyView > 0) {
@@ -58,6 +61,7 @@ public class PosterAdapter extends FragmentStatePagerAdapter {
         }
     }
 
+    @SuppressLint("ResourceType")
     @Override
     public int getCount() {
         if (posters.isEmpty()) {
