@@ -53,18 +53,18 @@ dependencies {
     implementation 'com.github.jitpack:android-example:3.0'
 }
 
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            release(MavenPublication) {
-//                from components.release
-//                groupId = 'com.github.itsmhyne' //your git id
-//                artifactId = 'PosterSlider' //your-repository
-//                version = '1.12' // As same as the Tag
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.itsmhyne' //your git id
+                artifactId = 'PosterSlider' //your-repository
+                version = '1.14' // As same as the Tag
+            }
+        }
+    }
+}
 
 repositories {
     mavenCentral()
