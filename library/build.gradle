@@ -30,6 +30,13 @@ android {
         }
     }
 
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
 }
 
 dependencies {
@@ -47,5 +54,6 @@ dependencies {
     implementation 'com.github.jitpack:android-example:3.0'
 }
 repositories {
+    jcenter()
     mavenCentral()
 }
