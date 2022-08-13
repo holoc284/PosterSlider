@@ -3,8 +3,9 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 //    id 'com.android.library'
     id 'kotlin-android'
+
+
 }
-group = 'com.github.itsmhyne'
 
 android {
     compileSdkVersion 32
