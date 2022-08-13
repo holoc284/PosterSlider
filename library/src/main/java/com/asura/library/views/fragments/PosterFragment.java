@@ -3,6 +3,7 @@ package com.asura.library.views.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -155,6 +156,8 @@ public class PosterFragment extends Fragment implements Player.Listener{
 
                 DefaultTrackSelector trackSelector = new DefaultTrackSelector(getActivity());
 
+//                TrackSelector trackSelector1 = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
+
 //                player = ExoPlayerFactory.newSimpleInstance(getActivity(),trackSelector);
                 player2 = new ExoPlayer.Builder(getActivity()).setTrackSelector(trackSelector).build();
 
@@ -169,7 +172,9 @@ public class PosterFragment extends Fragment implements Player.Listener{
                     final RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(getActivity());
                     try {
                         rawResourceDataSource.open(dataSpec);
+                    Log.d("Hamdan", "sukses");
                     } catch (RawResourceDataSource.RawResourceDataSourceException e) {
+                    Log.e("Hamdan", e.toString());
                         e.printStackTrace();
                     }
 
@@ -180,19 +185,20 @@ public class PosterFragment extends Fragment implements Player.Listener{
                             return rawResourceDataSource;
                         }
                     };
-//                    ProgressiveMediaSource mediaSource = new ProgressiveMediaSource(rawResourceDataSource.getUri(),
-//                            factory,new DefaultExtractorsFactory(), new Handler(),null);
-                    ProgressiveMediaSource mediaSource3 = new ProgressiveMediaSource.Factory(new DefaultHttpDataSource.Factory()).createMediaSource(
-                            MediaItem.fromUri(rawResourceDataSource.getUri()));
-                    player2.prepare(mediaSource3, true, false);
+                    DataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
+                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(rawResourceDataSource.getUri()));
+//                    ProgressiveMediaSource mediaSource3 = new ProgressiveMediaSource.Factory(new DefaultHttpDataSource.Factory()).createMediaSource(
+//                            MediaItem.fromUri(rawResourceDataSource.getUri()));
+                    player2.setMediaSource(mediaSource);
+                    player2.prepare(mediaSource, true, false);
                 }
 
                 else if(poster instanceof RemoteVideo){
                     RemoteVideo video = (RemoteVideo) poster;
-                    ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(
-                            new DefaultHttpDataSource.Factory()).createMediaSource(MediaItem.fromUri(video.getUri()));
-//                            createMediaSource(video.getUri());
-                    player2.prepare(mediaSource, true, false);
+                    MediaSource mediaSource = new ExtractorMediaSource.Factory(
+                            new DefaultHttpDataSourceFactory(Util.getUserAgent(getActivity(),"PosterSlider"))).
+                            createMediaSource(video.getUri());
+                    player.prepare(mediaSource, true, false);
                 }
 
 

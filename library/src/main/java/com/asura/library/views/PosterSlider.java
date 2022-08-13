@@ -100,7 +100,6 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
         parseCustomAttributes(attrs);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public PosterSlider(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         parseCustomAttributes(attrs);
@@ -189,24 +188,15 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                 slideIndicatorsGroup.onSlideAdd();
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                posterAdapter = new PosterAdapter(hostActivity.getSupportFragmentManager(), mustLoopSlides, getLayoutDirection(), posters);
-            } else {
-                posterAdapter = new PosterAdapter(hostActivity.getSupportFragmentManager(), mustLoopSlides, posters);
-            }
+            posterAdapter = new PosterAdapter(hostActivity.getSupportFragmentManager(), mustLoopSlides, getLayoutDirection(), posters);
             posterAdapter.setVideoPlayListener(this);
 
             viewPager.setAdapter(posterAdapter);
 
             if (mustLoopSlides) {
-                if (Build.VERSION.SDK_INT >= 17) {
-                    if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
-                        viewPager.setCurrentItem(1, false);
-                        slideIndicatorsGroup.onSlideChange(0);
-                    } else {
-                        viewPager.setCurrentItem(posters.size(), false);
-                        slideIndicatorsGroup.onSlideChange(posters.size() - 1);
-                    }
+                if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
+                    viewPager.setCurrentItem(1, false);
+                    slideIndicatorsGroup.onSlideChange(0);
                 } else {
                     viewPager.setCurrentItem(posters.size(), false);
                     slideIndicatorsGroup.onSlideChange(posters.size() - 1);
@@ -236,12 +226,8 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                                 }
                             } else {
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
-                                        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-                                    } else {
-                                        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-                                    }
+                                if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
+                                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
                                 } else {
                                     viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
                                 }

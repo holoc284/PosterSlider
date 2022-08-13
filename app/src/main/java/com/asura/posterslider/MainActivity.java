@@ -1,5 +1,6 @@
 package com.asura.posterslider;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         posterSlider = (PosterSlider) findViewById(R.id.poster_slider);
         List<Poster> posters = new ArrayList<>();
         posters.add(new DrawableImage(R.drawable.img_5126));
-        posters.add(new RawVideo(R.raw.img_2073));
+        posters.add(new RemoteVideo(Uri.parse("https://www.youtube.com/watch?v=EbvKBWstcDo")));
         posterSlider.setPosters(posters);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
