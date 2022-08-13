@@ -152,11 +152,11 @@ public class PosterFragment extends Fragment implements Player.Listener{
                 BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
                 AdaptiveTrackSelection.Factory videoTrackSelectionFactory =
                         new AdaptiveTrackSelection.Factory();
-                TrackSelector trackSelector =
-                        new DefaultTrackSelector();
+
+                DefaultTrackSelector trackSelector = new DefaultTrackSelector(getActivity());
 
 //                player = ExoPlayerFactory.newSimpleInstance(getActivity(),trackSelector);
-                player2 = new ExoPlayer.Builder(getActivity(), (RenderersFactory) trackSelector).build();
+                player2 = new ExoPlayer.Builder(getActivity()).setTrackSelector(trackSelector).build();
 
                 playerView.setPlayer(player);
                 if(isLooping){

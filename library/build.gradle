@@ -60,7 +60,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.itsmhyne' //your git id
                 artifactId = 'PosterSlider' //your-repository
-                version = '1.14' // As same as the Tag
+                version = '1.15' // As same as the Tag
             }
         }
     }
