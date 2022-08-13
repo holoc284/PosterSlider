@@ -5,6 +5,7 @@ apply plugin: 'maven-publish'
 group = 'com.github.itsmhyne'
 
 android {
+
     compileSdkVersion 32
     defaultConfig {
         applicationId "com.asura.posterslider"
@@ -14,12 +15,23 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+
     publishing {
         singleVariant('release') {
             withSourcesJar()
@@ -40,6 +52,21 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'com.github.jitpack:android-example:3.0'
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.itsmhyne' //your git id
+                artifactId = 'posterslider' //your-repository
+                version = '0.1.15' // As same as the Tag
+            }
+        }
+    }
+}
+
 repositories {
+    jcenter()
     mavenCentral()
 }
