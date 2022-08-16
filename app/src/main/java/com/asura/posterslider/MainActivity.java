@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         posterSlider = (PosterSlider) findViewById(R.id.poster_slider);
         List<Poster> posters = new ArrayList<>();
         posters.add(new DrawableImage(R.drawable.img_5126));
-        posters.add(new RemoteVideo(Uri.parse("https://www.youtube.com/watch?v=EbvKBWstcDo")));
+        posters.add(new RemoteVideo(Uri.parse("http://192.168.2.3/blitarkoi/public/assets_lp/media_komentar/1655434645_1269e9e71e2ce3531b86.mp4")));
+        posters.add(new RemoteVideo(Uri.parse("http://192.168.2.3/blitarkoi/public/assets_lp/media_komentar/1655370932_4786b5330b7526258165.mp4")));
+        posters.add(new RemoteVideo(Uri.parse("http://192.168.2.3/blitarkoi/public/assets_lp/media_komentar/1655371112_e1e5005950adeec2b812.mp4")));
         posterSlider.setPosters(posters);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);

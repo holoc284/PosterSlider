@@ -41,6 +41,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.StyledPlayerView;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
@@ -148,36 +149,24 @@ public class PosterFragment extends Fragment implements Player.Listener{
                 return imageView;
             }
             else if (poster instanceof VideoPoster){
-                final PlayerView playerView = new PlayerView(getActivity());
-
-                BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-                AdaptiveTrackSelection.Factory videoTrackSelectionFactory =
-                        new AdaptiveTrackSelection.Factory();
-
+                final StyledPlayerView playerView = new StyledPlayerView(getActivity());
                 DefaultTrackSelector trackSelector = new DefaultTrackSelector(getActivity());
-
-//                TrackSelector trackSelector1 = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(bandwidthMeter));
-
-//                player = ExoPlayerFactory.newSimpleInstance(getActivity(),trackSelector);
                 player2 = new ExoPlayer.Builder(getActivity()).setTrackSelector(trackSelector).build();
 
                 playerView.setPlayer(player2);
-                if(isLooping){
+                if (isLooping){
                     playerView.setUseController(false);
                 }
 
-                if(poster instanceof RawVideo){
+                if (poster instanceof RawVideo){
                     RawVideo video = (RawVideo) poster;
                     DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(video.getRawResource()));
                     final RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(getActivity());
                     try {
                         rawResourceDataSource.open(dataSpec);
-                    Log.d("Hamdan", "sukses");
-                    } catch (RawResourceDataSource.RawResourceDataSourceException e) {
-                    Log.e("Hamdan", e.toString());
+                    } catch (RawResourceDataSource.RawResourceDataSourceException e){
                         e.printStackTrace();
                     }
-
                     DataSource.Factory factory = new DataSource.Factory() {
                         @NonNull
                         @Override
@@ -185,22 +174,21 @@ public class PosterFragment extends Fragment implements Player.Listener{
                             return rawResourceDataSource;
                         }
                     };
-                    DataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
-                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(rawResourceDataSource.getUri()));
-//                    ProgressiveMediaSource mediaSource3 = new ProgressiveMediaSource.Factory(new DefaultHttpDataSource.Factory()).createMediaSource(
-//                            MediaItem.fromUri(rawResourceDataSource.getUri()));
+//                    DataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
+                    assert rawResourceDataSource.getUri() != null;
+                    ProgressiveMediaSource mediaSource = new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(rawResourceDataSource.getUri()));
                     player2.setMediaSource(mediaSource);
-                    player2.prepare(mediaSource, true, false);
-                }
-
-                else if(poster instanceof RemoteVideo){
+                } else if (poster instanceof RemoteVideo){
                     RemoteVideo video = (RemoteVideo) poster;
-                    MediaSource mediaSource = new ExtractorMediaSource.Factory(
-                            new DefaultHttpDataSourceFactory(Util.getUserAgent(getActivity(),"PosterSlider"))).
-                            createMediaSource(video.getUri());
-                    player.prepare(mediaSource, true, false);
+                    // Create a data source factory.
+                    DataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory();
+                    // Create a progressive media source pointing to a stream uri.
+                    MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                            .createMediaSource(MediaItem.fromUri(video.getUri()));
+                    Log.d("From library", mediaSource.toString());
+                    player2.setMediaSource(mediaSource);
+                    player2.prepare();
                 }
-
 
                 return playerView;
             }

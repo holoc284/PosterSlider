@@ -14,7 +14,6 @@
         android:layout_height="300dp"
         android:layout_marginTop="8dp"
         app:defaultIndicator="circle"
-        app:imageSlideInterval="5000"
         app:layout_constraintTop_toTopOf="parent"
         app:hideIndicators="true"
         app:loopSlides="true" />
