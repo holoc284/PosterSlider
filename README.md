@@ -7,7 +7,7 @@ Please don't use this in a working app. I have used this to learn how to build a
 ### Gradle
 add this line to your module build.gradle dependecies block:
 
-    compile 'com.github.mohan-dev1248:PosterSlider:1.0.2'
+    implementation 'com.github.itsmhyne:PosterSlider:Tag'
     
 Also in your root gradle file
     
