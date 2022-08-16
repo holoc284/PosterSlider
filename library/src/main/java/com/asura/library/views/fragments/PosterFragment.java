@@ -49,6 +49,7 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 import com.google.android.exoplayer2.util.Util;
+import com.squareup.picasso.Picasso;
 
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 
@@ -102,9 +103,10 @@ public class PosterFragment extends Fragment implements Player.Listener{
                 imageView.setScaleType(imagePoster.getScaleType());
                 if(imagePoster instanceof DrawableImage){
                     DrawableImage image = (DrawableImage) imagePoster;
-                    Glide.with(getActivity())
-                            .load(image.getDrawable())
-                            .into(imageView);
+//                    Glide.with(getActivity())
+//                            .load(image.getDrawable())
+//                            .into(imageView);
+                    Picasso.get().load(image.getDrawable()).centerCrop().into(imageView);
                 }else if(imagePoster instanceof BitmapImage){
                     BitmapImage image = (BitmapImage) imagePoster;
                     Glide.with(getActivity())
@@ -113,26 +115,30 @@ public class PosterFragment extends Fragment implements Player.Listener{
                 }else {
                     final RemoteImage image = (RemoteImage) imagePoster;
                     if (image.getErrorDrawable() == null && image.getPlaceHolder() == null) {
-                        Glide.with(getActivity()).load(image.getUrl()).into(imageView);
+//                        Glide.with(getActivity()).load(image.getUrl()).into(imageView);
+                        Picasso.get().load(image.getUrl()).centerCrop().into(imageView);
                     } else {
                         if (image.getPlaceHolder() != null && image.getErrorDrawable() != null) {
-                            Glide.with(getActivity())
-                                    .load(image.getUrl())
-                                    .apply(new RequestOptions()
-                                            .placeholder(image.getPlaceHolder()))
-                                    .into(imageView);
+//                            Glide.with(getActivity())
+//                                    .load(image.getUrl())
+//                                    .apply(new RequestOptions()
+//                                            .placeholder(image.getPlaceHolder()))
+//                                    .into(imageView);
+                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).centerCrop().into(imageView);
                         } else if (image.getErrorDrawable() != null) {
-                            Glide.with(getActivity())
-                                    .load(image.getUrl())
-                                    .apply(new RequestOptions()
-                                            .error(image.getErrorDrawable()))
-                                    .into(imageView);
+//                            Glide.with(getActivity())
+//                                    .load(image.getUrl())
+//                                    .apply(new RequestOptions()
+//                                            .error(image.getErrorDrawable()))
+//                                    .into(imageView);
+                            Picasso.get().load(image.getUrl()).error(image.getErrorDrawable()).centerCrop().into(imageView);
                         } else if (image.getPlaceHolder() != null) {
-                            Glide.with(getActivity())
-                                    .load(image.getUrl())
-                                    .apply(new RequestOptions()
-                                        .placeholder(image.getPlaceHolder()))
-                                    .into(imageView);
+//                            Glide.with(getActivity())
+//                                    .load(image.getUrl())
+//                                    .apply(new RequestOptions()
+//                                        .placeholder(image.getPlaceHolder()))
+//                                    .into(imageView);
+                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).centerCrop().into(imageView);
                         }
                     }
                 }
