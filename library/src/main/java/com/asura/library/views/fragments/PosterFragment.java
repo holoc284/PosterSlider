@@ -106,7 +106,7 @@ public class PosterFragment extends Fragment implements Player.Listener{
 //                    Glide.with(getActivity())
 //                            .load(image.getDrawable())
 //                            .into(imageView);
-                    Picasso.get().load(image.getDrawable()).centerCrop().into(imageView);
+                    Picasso.get().load(image.getDrawable()).into(imageView);
                 }else if(imagePoster instanceof BitmapImage){
                     BitmapImage image = (BitmapImage) imagePoster;
                     Glide.with(getActivity())
@@ -116,7 +116,7 @@ public class PosterFragment extends Fragment implements Player.Listener{
                     final RemoteImage image = (RemoteImage) imagePoster;
                     if (image.getErrorDrawable() == null && image.getPlaceHolder() == null) {
 //                        Glide.with(getActivity()).load(image.getUrl()).into(imageView);
-                        Picasso.get().load(image.getUrl()).centerCrop().into(imageView);
+                        Picasso.get().load(image.getUrl()).into(imageView);
                     } else {
                         if (image.getPlaceHolder() != null && image.getErrorDrawable() != null) {
 //                            Glide.with(getActivity())
@@ -124,21 +124,21 @@ public class PosterFragment extends Fragment implements Player.Listener{
 //                                    .apply(new RequestOptions()
 //                                            .placeholder(image.getPlaceHolder()))
 //                                    .into(imageView);
-                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).centerCrop().into(imageView);
+                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).into(imageView);
                         } else if (image.getErrorDrawable() != null) {
 //                            Glide.with(getActivity())
 //                                    .load(image.getUrl())
 //                                    .apply(new RequestOptions()
 //                                            .error(image.getErrorDrawable()))
 //                                    .into(imageView);
-                            Picasso.get().load(image.getUrl()).error(image.getErrorDrawable()).centerCrop().into(imageView);
+                            Picasso.get().load(image.getUrl()).error(image.getErrorDrawable()).into(imageView);
                         } else if (image.getPlaceHolder() != null) {
 //                            Glide.with(getActivity())
 //                                    .load(image.getUrl())
 //                                    .apply(new RequestOptions()
 //                                        .placeholder(image.getPlaceHolder()))
 //                                    .into(imageView);
-                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).centerCrop().into(imageView);
+                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).into(imageView);
                         }
                     }
                 }
