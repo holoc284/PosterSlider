@@ -1,7 +1,7 @@
 # PosterSlider
 Easy to use Image/Video Slider for Android.
 
-Please don't use this in a working app. I have used this to learn how to build an app. I am not giving further support on this
+Please don't use this in a working app. I have used this to learn how to build an app. I am will update in library, maybe :)
 
 ## How to download
 ### Gradle
