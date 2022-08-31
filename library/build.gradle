@@ -55,6 +55,8 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.github.jitpack:android-example:3.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
+
+    implementation 'com.github.HaarigerHarald:android-youtubeExtractor:v2.1.0'
 }
 
 afterEvaluate {
@@ -64,7 +66,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.itsmhyne' //your git id
                 artifactId = 'PosterSlider' //your-repository
-                version = '1.17' // As same as the Tag
+                version = '1.18' // As same as the Tag
             }
         }
     }
