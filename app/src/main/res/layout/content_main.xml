@@ -14,8 +14,9 @@
         android:layout_height="300dp"
         android:layout_marginTop="8dp"
         app:defaultIndicator="circle"
+        app:imageSlideInterval="3000"
         app:layout_constraintTop_toTopOf="parent"
-        app:hideIndicators="true"
+        app:hideIndicators="false"
         app:loopSlides="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,8 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.asura.library.R;
 import com.asura.library.events.IVideoPlayListener;
@@ -106,34 +108,60 @@ public class PosterFragment extends Fragment implements Player.Listener {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (poster != null) {
-            if (poster instanceof ImagePoster) {
+            LinearLayout linearLayout = new LinearLayout(getActivity());
+            linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+            // create TextView
+            TextView txtTitle = new TextView(getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            layoutParams.setMargins(0, 10, 0, 10);
+            txtTitle.setLayoutParams(layoutParams);
+            txtTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            txtTitle.setText("hello world");
+            txtTitle.setTextSize(14f);
+
+            linearLayout.addView(txtTitle);
+
+            if(poster instanceof ImagePoster){
                 final AdjustableImageView imageView = new AdjustableImageView(getActivity());
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 imageView.setAdjustViewBounds(true);
                 ImagePoster imagePoster = (ImagePoster) poster;
                 imageView.setScaleType(imagePoster.getScaleType());
-                if (imagePoster instanceof DrawableImage) {
+                if(imagePoster instanceof DrawableImage){
                     DrawableImage image = (DrawableImage) imagePoster;
-//                    Glide.with(getActivity())
-//                            .load(image.getDrawable())
-//                            .into(imageView);
-                    Picasso.get().load(image.getDrawable()).into(imageView);
-                } else if (imagePoster instanceof BitmapImage) {
+                    Glide.with(getActivity())
+                            .load(image.getDrawable())
+                            .into(imageView);
+                }else if(imagePoster instanceof BitmapImage){
                     BitmapImage image = (BitmapImage) imagePoster;
                     Glide.with(getActivity())
                             .load(image.getBitmap())
                             .into(imageView);
-                } else {
+                }else {
                     final RemoteImage image = (RemoteImage) imagePoster;
                     if (image.getErrorDrawable() == null && image.getPlaceHolder() == null) {
-                        Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).into(imageView);
+                        Glide.with(getActivity()).load(image.getUrl()).into(imageView);
                     } else {
                         if (image.getPlaceHolder() != null && image.getErrorDrawable() != null) {
-                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).into(imageView);
+                            Glide.with(getActivity())
+                                    .load(image.getUrl())
+                                    .apply(new RequestOptions()
+                                            .placeholder(image.getPlaceHolder()))
+                                    .into(imageView);
                         } else if (image.getErrorDrawable() != null) {
-                            Picasso.get().load(image.getUrl()).error(image.getErrorDrawable()).into(imageView);
+                            Glide.with(getActivity())
+                                    .load(image.getUrl())
+                                    .apply(new RequestOptions()
+                                            .error(image.getErrorDrawable()))
+                                    .into(imageView);
                         } else if (image.getPlaceHolder() != null) {
-                            Picasso.get().load(image.getUrl()).error(image.getPlaceHolder()).into(imageView);
+                            Glide.with(getActivity())
+                                    .load(image.getUrl())
+                                    .apply(new RequestOptions()
+                                            .placeholder(image.getPlaceHolder()))
+                                    .into(imageView);
                         }
                     }
                 }
@@ -142,21 +170,24 @@ public class PosterFragment extends Fragment implements Player.Listener {
                     @Override
                     public void onClick(View view) {
                         OnPosterClickListener onPosterClickListener = poster.getOnPosterClickListener();
-                        if (onPosterClickListener != null) {
+                        if(onPosterClickListener!=null){
                             onPosterClickListener.onClick(poster.getPosition());
                         }
                     }
                 });
-                return imageView;
+                linearLayout.addView(imageView);
+                return linearLayout;
             } else if (poster instanceof VideoPoster) {
                 final StyledPlayerView playerView = new StyledPlayerView(getActivity());
+                playerView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 DefaultTrackSelector trackSelector = new DefaultTrackSelector(getActivity());
                 player2 = new ExoPlayer.Builder(getActivity()).setTrackSelector(trackSelector).build();
 
                 playerView.setPlayer(player2);
-                if (isLooping) {
-                    playerView.setUseController(false);
-                }
+                playerView.setControllerShowTimeoutMs(1000);
+//                if (isLooping) {
+//                    playerView.setUseController(false);
+//                }
 
                 if (poster instanceof RawVideo) {
                     RawVideo video = (RawVideo) poster;
@@ -216,7 +247,8 @@ public class PosterFragment extends Fragment implements Player.Listener {
                     }
                 }
 
-                return playerView;
+                linearLayout.addView(playerView);
+                return linearLayout;
             } else {
                 throw new RuntimeException("Unknown Poster kind");
             }
@@ -241,7 +273,7 @@ public class PosterFragment extends Fragment implements Player.Listener {
     @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if (isLooping && playbackState == STATE_ENDED) {
-            videoPlayListener.onVideoStopped();
+            videoPlayListener.onVideoStopped(true);
         }
     }
 
@@ -275,6 +307,17 @@ public class PosterFragment extends Fragment implements Player.Listener {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (player2 != null) {
+            player2.removeListener(this);
+            player2.stop();
+            player2.release();
+            player2 = null;
+        }
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && isLooping && player2 != null) {
@@ -284,6 +327,14 @@ public class PosterFragment extends Fragment implements Player.Listener {
             }
             player2.setPlayWhenReady(true);
             player2.addListener(this);
+        }
+        if (player2 != null) {
+            if (player2.getPlaybackState() == Player.STATE_READY) {
+                player2.setPlayWhenReady(isVisibleToUser);
+                player2.addListener(this);
+                if (!isVisibleToUser) videoPlayListener.onVideoStopped(false);
+                else videoPlayListener.onVideoStarted();
+            }
         }
     }
 }

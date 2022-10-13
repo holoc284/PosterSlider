@@ -64,7 +64,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.itsmhyne' //your git id
+                groupId = 'com.github.holoc284' //your git id
                 artifactId = 'PosterSlider' //your-repository
                 version = '1.18' // As same as the Tag
             }

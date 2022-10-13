@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.asura.library.posters.DrawableImage;
 import com.asura.library.posters.Poster;
 import com.asura.library.posters.RawVideo;
+import com.asura.library.posters.RemoteImage;
 import com.asura.library.posters.RemoteVideo;
 import com.asura.library.views.PosterSlider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,11 +35,13 @@ public class MainActivity extends AppCompatActivity {
         posterSlider = (PosterSlider) findViewById(R.id.poster_slider);
         List<Poster> posters = new ArrayList<>();
         posters.add(new DrawableImage(R.drawable.img_5126));
-        posters.add(new RemoteVideo(Uri.parse("https://www.youtube.com/watch?v=tD68_o1GMg0")));
-        posters.add(new RemoteVideo(Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4")));
-        posters.add(new RemoteVideo(Uri.parse("http://192.168.2.3/blitarkoi/public/assets_lp/media_komentar/1655370932_4786b5330b7526258165.mp4")));
-        posters.add(new RemoteVideo(Uri.parse("http://192.168.2.3/blitarkoi/public/assets_lp/media_komentar/1655371112_e1e5005950adeec2b812.mp4")));
+        posters.add(new RemoteVideo(Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4")));
+        posters.add(new RemoteVideo(Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4")));
+        posters.add(new RemoteVideo(Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4")));
+        posters.add(new RemoteImage("https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/640px-Image_created_with_a_mobile_phone.png"));
         posterSlider.setPosters(posters);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

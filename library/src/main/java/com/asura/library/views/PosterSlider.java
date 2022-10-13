@@ -2,6 +2,7 @@ package com.asura.library.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -143,17 +145,17 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                     boolean mustMakeViewPagerWrapContent = getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT;
 
                     viewPager = new CustomViewPager(getContext(), mustMakeViewPagerWrapContent);
-                    viewPager.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-                    viewPager.setId(View.generateViewId());
                     viewPager.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    viewPager.setId(View.generateViewId());
                     viewPager.addOnPageChangeListener(PosterSlider.this);
                     addView(viewPager);
                     slideIndicatorsGroup = new SlideIndicatorsGroup(getContext(), selectedSlideIndicator, unSelectedSlideIndicator, defaultIndicator, indicatorSize, mustAnimateIndicators);
                     if (!hideIndicators) {
                         addView(slideIndicatorsGroup);
+                        float scale = getResources().getDisplayMetrics().density;
+                        int dpAsPixels = (int) (indicatorSize*scale + 0.5f);
+                        viewPager.setPadding(0, 0, 0, dpAsPixels * 2);
                     }
-
                     setupTimer();
                     setupIsCalled = true;
                     renderRemainingPosters();
@@ -192,6 +194,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
             posterAdapter.setVideoPlayListener(this);
 
             viewPager.setAdapter(posterAdapter);
+            viewPager.setOffscreenPageLimit(posters.size() - 1);
 
             if (mustLoopSlides) {
                 if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
@@ -250,6 +253,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
 
     @Override
     public void onPageSelected(int position) {
+        Log.e("page change", position + "");
         if (mustLoopSlides) {
             if (position == 0) {
                 postDelayed(new Runnable() {
@@ -518,8 +522,12 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     @Override
-    public void onVideoStopped() {
-        setupTimerWithNoDelay();
+    public void onVideoStopped(Boolean isEnd) {
+        if (isEnd) {
+            setupTimerWithNoDelay();
+        } else {
+            setupTimer();
+        }
         videoStartedinAutoLoop = false;
     }
 
@@ -540,12 +548,8 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                                 }
                             } else {
 
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                                    if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
-                                        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
-                                    } else {
-                                        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
-                                    }
+                                if (getLayoutDirection() == LAYOUT_DIRECTION_LTR) {
+                                    viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
                                 } else {
                                     viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
                                 }
