@@ -3,7 +3,7 @@ package com.asura.library.views.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.asura.library.R;
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.events.OnPosterClickListener;
 import com.asura.library.posters.BitmapImage;
@@ -32,29 +31,17 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.MergingMediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DataSpec;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.RawResourceDataSource;
-import com.google.android.exoplayer2.util.Util;
-import com.squareup.picasso.Picasso;
 
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 
@@ -68,15 +55,10 @@ import at.huber.youtubeExtractor.YtFile;
 public class PosterFragment extends Fragment implements Player.Listener {
 
     private Poster poster;
-
     private IVideoPlayListener videoPlayListener;
 
-    private SimpleExoPlayer player;
     private ExoPlayer player2;
     private boolean isLooping;
-    private boolean playWhenReady = false;
-    private int currentWindow = 0;
-    long playbackPosition = 0;
 
     public PosterFragment() {
         // Required empty public constructor
@@ -308,9 +290,37 @@ public class PosterFragment extends Fragment implements Player.Listener {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        if (player2 != null) {
+            Log.e("onDetach", "release exoplayer ...");
+            player2.setPlayWhenReady(false);
+            player2.removeListener(this);
+            player2.stop();
+            player2.release();
+            player2 = null;
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (player2 != null) {
+            Log.e("onDestroyView", "release exoplayer ...");
+            player2.setPlayWhenReady(false);
+            player2.removeListener(this);
+            player2.stop();
+            player2.release();
+            player2 = null;
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (player2 != null) {
+            Log.e("onDestroy", "release exoplayer ...");
+            player2.setPlayWhenReady(false);
             player2.removeListener(this);
             player2.stop();
             player2.release();
