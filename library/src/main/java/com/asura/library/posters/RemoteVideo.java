@@ -6,13 +6,25 @@ import android.os.Parcelable;
 
 public class RemoteVideo extends VideoPoster implements Parcelable {
     private Uri uri;
+    String urlDetail;
+    String name;
 
-    public RemoteVideo(Uri uri) {
+    public RemoteVideo(Uri uri, String urlDetail, String name) {
         this.uri = uri;
+        this.urlDetail = urlDetail;
+        this.name = name;
     }
 
     public Uri getUri() {
         return uri;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrlDetail() {
+        return urlDetail;
     }
 
     public RemoteVideo(Parcel in){

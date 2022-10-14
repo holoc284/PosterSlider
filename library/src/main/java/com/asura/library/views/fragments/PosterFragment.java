@@ -118,7 +118,6 @@ public class PosterFragment extends Fragment implements Player.Listener {
             layoutParams.setMargins(0, 10, 0, 10);
             txtTitle.setLayoutParams(layoutParams);
             txtTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            txtTitle.setText("hello world");
             txtTitle.setTextSize(14f);
 
             linearLayout.addView(txtTitle);
@@ -141,6 +140,7 @@ public class PosterFragment extends Fragment implements Player.Listener {
                             .into(imageView);
                 }else {
                     final RemoteImage image = (RemoteImage) imagePoster;
+                    txtTitle.setText(image.getName());
                     if (image.getErrorDrawable() == null && image.getPlaceHolder() == null) {
                         Glide.with(getActivity()).load(image.getUrl()).into(imageView);
                     } else {
@@ -210,6 +210,7 @@ public class PosterFragment extends Fragment implements Player.Listener {
                     player2.setMediaSource(mediaSource);
                 } else if (poster instanceof RemoteVideo) {
                     RemoteVideo video = (RemoteVideo) poster;
+                    txtTitle.setText(video.getName());
                     String videoUrl = video.getUri().toString();
                     boolean ResultUri = videoUrl.contains("https://www.youtube.com/");
                     if (ResultUri) {

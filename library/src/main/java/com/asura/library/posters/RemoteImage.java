@@ -7,15 +7,27 @@ import android.os.Parcelable;
 
 public class RemoteImage extends ImagePoster implements Parcelable {
     private String url;
+    private String urlDetail;
+    private String name;
     private Drawable placeHolder;
     private Drawable errorDrawable;
 
-    public RemoteImage(String url) {
+    public RemoteImage(String url, String urlDetail, String name) {
         this.url = url;
+        this.urlDetail = urlDetail;
+        this.name = name;
     }
 
     public String getUrl() {
         return url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getUrlDetail() {
+        return urlDetail;
     }
 
     public Drawable getPlaceHolder() {
