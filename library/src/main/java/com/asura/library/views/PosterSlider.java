@@ -20,6 +20,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.asura.library.R;
@@ -61,16 +64,19 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
     private int imageSlideInterval = 5000;
 
     private boolean hideIndicators = false;
+    private boolean isInsideFragment = false;
 
     private boolean mustWrapContent;
 
     private SlideIndicatorsGroup slideIndicatorsGroup;
 
     private static HandlerThread handlerThread;
-    static{
+
+    static {
         handlerThread = new HandlerThread("TimerThread");
         handlerThread.start();
     }
+
     private Handler handler = new Handler(handlerThread.getLooper());
 
     private boolean setupIsCalled = false;
@@ -153,7 +159,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                     if (!hideIndicators) {
                         addView(slideIndicatorsGroup);
                         float scale = getResources().getDisplayMetrics().density;
-                        int dpAsPixels = (int) (indicatorSize*scale + 0.5f);
+                        int dpAsPixels = (int) (indicatorSize * scale + 0.5f);
                         viewPager.setPadding(0, 0, 0, dpAsPixels * 2);
                     }
                     setupTimer();
@@ -167,6 +173,10 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
 
     private void renderRemainingPosters() {
         setPosters(posterQueue);
+    }
+
+    public void IsInsideFragment(Boolean isInsideFragment) {
+        this.isInsideFragment = isInsideFragment;
     }
 
     public void setPosters(List<Poster> posters) {
@@ -190,9 +200,12 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
                 slideIndicatorsGroup.onSlideAdd();
             }
 
-            posterAdapter = new PosterAdapter(hostActivity.getSupportFragmentManager(), mustLoopSlides, getLayoutDirection(), posters);
+            if (isInsideFragment) {
+                posterAdapter = new PosterAdapter(FragmentManager.findFragment(this).getChildFragmentManager(), mustLoopSlides, getLayoutDirection(), posters);
+            } else {
+                posterAdapter = new PosterAdapter(hostActivity.getSupportFragmentManager(), mustLoopSlides, getLayoutDirection(), posters);
+            }
             posterAdapter.setVideoPlayListener(this);
-
             viewPager.setAdapter(posterAdapter);
             viewPager.setOffscreenPageLimit(posters.size() - 1);
 
@@ -213,7 +226,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
     }
 
     private void setupTimer() {
-        if (imageSlideInterval > 0&&mustLoopSlides) {
+        if (imageSlideInterval > 0 && mustLoopSlides) {
             timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
@@ -428,9 +441,10 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
         return viewPager.getCurrentItem();
     }
 
-    public boolean getMustLoopSlides(){
+    public boolean getMustLoopSlides() {
         return mustLoopSlides;
     }
+
     // Events
     ///////////////////////////////////////////////////////////////////////////
     @Override
@@ -506,7 +520,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
         }
     }
 
-    public void removeAllPosters(){
+    public void removeAllPosters() {
         this.posters.clear();
         this.slideIndicatorsGroup.removeAllViews();
         this.slideIndicatorsGroup.setSlides(0);
