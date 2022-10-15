@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.asura.library.R;
+import com.asura.library.events.AddOnPosterChangeListener;
 import com.asura.library.events.IVideoPlayListener;
 import com.asura.library.events.OnPosterClickListener;
 import com.asura.library.posters.Poster;
@@ -83,6 +84,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
     List<Poster> posterQueue = new ArrayList<>();
 
     private OnPosterClickListener onPosterClickListener;
+    private AddOnPosterChangeListener addOnPosterChangeListener;
 
     private Timer timer;
 
@@ -267,6 +269,7 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
     @Override
     public void onPageSelected(int position) {
         Log.e("page change", position + "");
+        addOnPosterChangeListener.onPage(position);
         if (mustLoopSlides) {
             if (position == 0) {
                 postDelayed(new Runnable() {
@@ -324,6 +327,10 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
         for (Poster poster : posters) {
             poster.setOnPosterClickListener(onPosterClickListener);
         }
+    }
+
+    public void addOnPosterChangeListener(AddOnPosterChangeListener addOnPosterChangeListener) {
+        this.addOnPosterChangeListener = addOnPosterChangeListener;
     }
 
     public void setDefaultIndicator(final int indicator) {
