@@ -9,7 +9,7 @@
     <com.asura.library.views.PosterSlider
         android:id="@+id/poster_slider"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         app:defaultIndicator="circle"
         app:imageSlideInterval="3000"

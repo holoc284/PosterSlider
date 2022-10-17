@@ -6,7 +6,7 @@ import android.widget.ImageView;
 
 public class ImagePoster extends Poster implements Parcelable {
 
-    private ImageView.ScaleType scaleType = ImageView.ScaleType.CENTER_CROP;
+    private ImageView.ScaleType scaleType = ImageView.ScaleType.FIT_CENTER;
 
     public ImagePoster(){
 

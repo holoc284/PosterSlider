@@ -269,7 +269,9 @@ public class PosterSlider extends FrameLayout implements ViewPager.OnPageChangeL
     @Override
     public void onPageSelected(int position) {
         Log.e("page change", position + "");
-        addOnPosterChangeListener.onPage(position);
+        if (addOnPosterChangeListener != null) {
+            addOnPosterChangeListener.onPage(position);
+        }
         if (mustLoopSlides) {
             if (position == 0) {
                 postDelayed(new Runnable() {

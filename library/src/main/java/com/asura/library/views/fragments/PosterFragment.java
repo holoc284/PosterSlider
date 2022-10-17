@@ -9,6 +9,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -97,15 +98,15 @@ public class PosterFragment extends Fragment implements Player.Listener {
             // create TextView
             TextView txtTitle = new TextView(getContext());
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            layoutParams.setMargins(0, 10, 0, 10);
+            layoutParams.setMargins(0, 10, 0, 15);
             txtTitle.setLayoutParams(layoutParams);
             txtTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-            txtTitle.setTextSize(14f);
+            txtTitle.setTextSize(16f);
 
             linearLayout.addView(txtTitle);
 
             if(poster instanceof ImagePoster){
-                final AdjustableImageView imageView = new AdjustableImageView(getActivity());
+                final ImageView imageView = new ImageView(getActivity());
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 imageView.setAdjustViewBounds(true);
                 ImagePoster imagePoster = (ImagePoster) poster;

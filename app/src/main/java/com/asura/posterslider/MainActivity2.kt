@@ -16,8 +16,8 @@ class MainActivity2 : AppCompatActivity() {
         val posterSlider = findViewById<PosterSlider>(R.id.poster_slider)
         val posters: MutableList<Poster> = ArrayList()
         posters.add(
-            RemoteVideo(
-                Uri.parse("https://www.youtube.com/watch?v=hLRnu7C6XYg"),
+            RemoteImage(
+                "https://www.pngitem.com/pimgs/m/185-1850014_free-sample-hd-png-download.png",
                 "",
                 "Header"
             )
